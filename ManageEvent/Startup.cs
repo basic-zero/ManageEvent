@@ -18,6 +18,7 @@ namespace ManageEvent
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            Util.Connection.Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
