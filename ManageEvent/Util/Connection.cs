@@ -16,7 +16,7 @@ namespace ManageEvent.Util
 
         public static SqlConnection createConnection()
         {
-            Console.WriteLine(_configuration["ConnectionStrings:DefaultConnection"]);
+            //Console.WriteLine(_configuration["ConnectionStrings:DefaultConnection"]);
             return new SqlConnection(_configuration["ConnectionStrings:DefaultConnection"]);
         }
     }

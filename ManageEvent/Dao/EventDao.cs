@@ -11,7 +11,7 @@ namespace ManageEvent.Dao
 {
     public class EventDao
     {
-        public List<Event> getEventList(string userId, string search)
+        public List<Event> GetEventList(int userId, string search)
         {
             SqlConnection connection = Connection.createConnection();
             List<Event> events = null;
@@ -33,10 +33,6 @@ namespace ManageEvent.Dao
                     newEvent.Status = dataReader.GetString(3);
                     events.Add(newEvent);
                 }
-}
-            catch (SqlException se)
-            {
-                throw new Exception(se.Message);
             }
             finally
             {
@@ -44,5 +40,69 @@ namespace ManageEvent.Dao
             }
             return events;
         }
+
+        public bool Create(Event dto)
+        {
+            SqlConnection connection = Connection.createConnection();
+            SqlCommand cmd = new SqlCommand("Insert Into tblEvent(name,description,userId, status) VALUES(@name,@description,@userID,@status);", connection);
+            cmd.Parameters.AddWithValue("@name", dto.Name);
+            cmd.Parameters.AddWithValue("@description", dto.Description);
+            cmd.Parameters.AddWithValue("@userID", dto.UserId);
+            cmd.Parameters.AddWithValue("@status", "new");
+            int count = 0;
+            try
+            {
+                connection.Open();
+                count = cmd.ExecuteNonQuery();
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+            return count == 1;
+        }
+
+        public bool DeleteById(int Id)
+        {
+            SqlConnection connection = Connection.createConnection();
+            SqlCommand cmd = new SqlCommand("UPDATE dbo.tblEvent SET status='deleted' WHERE id=@id", connection);
+            cmd.Parameters.AddWithValue("@id", Id);
+            int count = 0;
+            try
+            {
+                connection.Open();
+                count = cmd.ExecuteNonQuery();
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+            return count == 1;
+        }
+
+        public bool Update(Event dto)
+        {
+            SqlConnection connection = Connection.createConnection();
+            SqlCommand cmd = new SqlCommand("Update tblEvent set name=@name,description=@description where id=@id;", connection);
+            cmd.Parameters.AddWithValue("@id", dto.Id);
+            cmd.Parameters.AddWithValue("@name", dto.Name);
+            cmd.Parameters.AddWithValue("@description", dto.Description);
+            int count = 0;
+            try
+            {
+                connection.Open();
+                count = cmd.ExecuteNonQuery();
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+            return count == 1;
+        }
+
     }
+
 }

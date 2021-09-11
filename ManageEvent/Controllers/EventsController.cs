@@ -22,29 +22,64 @@ namespace ManageEvent.Controllers
 
         IConfiguration _configuration;
         // GET: api/<EventsController>
-        [HttpGet("{id}")]
-        public IEnumerable<Event> Get(string id)
+        [HttpGet("{id}/{token}")]
+        public IEnumerable<Event> Get(int id, string token)
         {
-            return new EventDao().getEventList(id, "").ToArray();
+            try 
+            { 
+                if(new UserDao().Authentication(token))
+                {
+                    return new EventDao().GetEventList(id, "").ToArray();
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch
+            {
+                return null;
+            }
+            
         }
 
 
         // POST api/<EventsController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post([FromBody] EventForPost eventForPost)
         {
+            if (new UserDao().Authentication(eventForPost.Token))
+            {
+                Event newEvent = new Event();
+                newEvent.Name = eventForPost.Name;
+                newEvent.Description = eventForPost.Description;
+                newEvent.UserId = eventForPost.UserId;
+                new EventDao().Create(newEvent);
+            }
         }
 
         // PUT api/<EventsController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public void Put(int id, [FromBody] EventForPut eventForPut)
         {
+            if (new UserDao().Authentication(eventForPut.Token))
+            {
+                Event newEvent = new Event();
+                newEvent.Name = eventForPut.Name;
+                newEvent.Description = eventForPut.Description;
+                newEvent.Id = id;
+                new EventDao().Update(newEvent);
+            }
         }
 
         // DELETE api/<EventsController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpDelete("{id}/{token}")]
+        public void Delete(int id, string token)
         {
+            if (new UserDao().Authentication(token))
+            {
+                new EventDao().DeleteById(id);
+            }
         }
     }
 }
