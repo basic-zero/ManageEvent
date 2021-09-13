@@ -24,7 +24,7 @@ namespace ManageEvent.Dto
         public string Name { get; set; }
         public string Description { get; set; }
         public List<CheckIn> checkIns { get; set; }
-        public string userId { get; set; }
+        public int UserId { get; set; }
         public string Status { get; set; }
     }
 }
