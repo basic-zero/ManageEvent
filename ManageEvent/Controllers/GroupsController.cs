@@ -12,18 +12,20 @@ using System.Threading.Tasks;
 namespace ManageEvent.Controllers {
     [Route("api/[controller]")]
     [ApiController]
-    public class EventsController : ControllerBase {
-        public EventsController(IConfiguration configuration) {
+    public class GroupsController : ControllerBase {
+
+        public GroupsController(IConfiguration configuration) {
             _configuration = configuration;
         }
-
         IConfiguration _configuration;
-        // GET: api/<EventsController>
+
+
+        // GET api/<GroupsController>/5
         [HttpGet("{id}/{token}")]
-        public IEnumerable<Event> Get(int id, string token) {
+        public IEnumerable<Group> Get(int id,string token) {
             try {
                 if (new UserDao().Authentication(token)) {
-                    return new EventDao().GetEventList(id, "").ToArray();
+                    return new GroupDao().getGroupList(id, "").ToArray();
                 } else {
                     return null;
                 }
@@ -33,28 +35,27 @@ namespace ManageEvent.Controllers {
 
         }
 
-
         // POST api/<EventsController>
         [HttpPost]
-        public void Post([FromBody] EventForPost eventForPost) {
-            if (new UserDao().Authentication(eventForPost.Token)) {
-                Event newEvent = new Event();
-                newEvent.Name = eventForPost.Name;
-                newEvent.Description = eventForPost.Description;
-                newEvent.UserId = eventForPost.UserId;
-                new EventDao().Create(newEvent);
+        public void Post([FromBody] GroupForPost groupForPost) {
+            if (new UserDao().Authentication(groupForPost.Token)) {
+                Group newGroup = new Group();
+                newGroup.Name = groupForPost.Name;
+                newGroup.Description = groupForPost.Description;
+                newGroup.UserId = groupForPost.UserId;
+                new GroupDao().Create(newGroup);
             }
         }
 
         // PUT api/<EventsController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] EventForPut eventForPut) {
-            if (new UserDao().Authentication(eventForPut.Token)) {
-                Event newEvent = new Event();
-                newEvent.Name = eventForPut.Name;
-                newEvent.Description = eventForPut.Description;
-                newEvent.Id = id;
-                new EventDao().Update(newEvent);
+        public void Put(int id, [FromBody] GroupForPut groupForPut) {
+            if (new UserDao().Authentication(groupForPut.Token)) {
+                Group newGroup = new Group();
+                newGroup.Name = groupForPut.Name;
+                newGroup.Description = groupForPut.Description;
+                newGroup.Id = id;
+                new GroupDao().Update(newGroup);
             }
         }
 
@@ -62,7 +63,7 @@ namespace ManageEvent.Controllers {
         [HttpDelete("{id}/{token}")]
         public void Delete(int id, string token) {
             if (new UserDao().Authentication(token)) {
-                new EventDao().DeleteById(id);
+                new GroupDao().DeleteById(id);
             }
         }
     }
