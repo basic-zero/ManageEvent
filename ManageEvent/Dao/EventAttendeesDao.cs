@@ -10,16 +10,17 @@ namespace ManageEvent.Dao
 {
     public class EventAttendeesDao
     {
-        SqlConnection connection = Connection.createConnection();
-        SqlCommand cmd;
+       
+        
         public List<EventAttendees> GetAllEventAttendees(int groupID)
         {
+            SqlConnection connection = Connection.createConnection();
             List<EventAttendees> list = null;
             EventAttendees eventAttendees;
-            string query = "SELECT te.name, te.email, te.other, te.status, te.groupID, te.id " +
+            string query = "SELECT name, email, other, status, groupID, id " +
                 "FROM tblEventAttendees te " +
                 "WHERE te.groupID = @groupID";
-            cmd = new SqlCommand(query, connection);
+            SqlCommand cmd = new SqlCommand(query, connection);
             cmd.Parameters.AddWithValue("@groupID", groupID);
             try
             {
@@ -34,6 +35,7 @@ namespace ManageEvent.Dao
                     eventAttendees.Other = dataReader.GetString(2);
                     eventAttendees.Status = dataReader.GetBoolean(3);
                     eventAttendees.GroupId = dataReader.GetInt32(4);
+                    eventAttendees.Id = dataReader.GetInt32(5);
                     list.Add(eventAttendees);
                 }
             }
@@ -49,10 +51,11 @@ namespace ManageEvent.Dao
         }
         public bool Create(EventAttendees eventAttendees)
         {
+            SqlConnection connection = Connection.createConnection();
             int check = 0;
-            string query = "INSERT INTO tblEventAttendees(groupID, name,email, other, status) " +
-                "VALUES(@groupID, @name, @email, @other, 0) ";
-            cmd = new SqlCommand(query, connection);
+            string query = "INSERT INTO dbo.tblEventAttendees(groupID, name, email, other, status) " +
+                "Values(@groupID, @name, @email, @other, 1)";
+            SqlCommand cmd = new SqlCommand(query, connection);
             cmd.Parameters.AddWithValue("@groupID", eventAttendees.GroupId);
             cmd.Parameters.AddWithValue("@name", eventAttendees.Name);
             cmd.Parameters.AddWithValue("@email", eventAttendees.Email);
@@ -75,7 +78,7 @@ namespace ManageEvent.Dao
         public bool DeleteById(int Id)
         {
             SqlConnection connection = Connection.createConnection();
-            cmd = new SqlCommand("UPDATE tblEventAttendees SET status='True' WHERE id=@id", connection);
+            SqlCommand cmd = new SqlCommand("UPDATE tblEventAttendees SET status='False' WHERE id=@id", connection);
             cmd.Parameters.AddWithValue("@id", Id);
             int count = 0;
             try

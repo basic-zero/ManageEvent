@@ -20,7 +20,7 @@ namespace ManageEvent.Controllers
             _configuration = configuration;
         }
         // GET: api/<EventAttendeesController[]>
-        [HttpGet("{id}")]
+        [HttpGet("{id}/{token}")]
         public IEnumerable<EventAttendees> Get(int id, string token)
         {
             try
@@ -49,6 +49,7 @@ namespace ManageEvent.Controllers
                 eventAttendees.GroupId = eventAttendeesForPost.GroupId;
                 eventAttendees.Name = eventAttendeesForPost.Name;
                 eventAttendees.Email = eventAttendeesForPost.Email;
+                eventAttendees.Other = eventAttendeesForPost.Other;
                 new EventAttendeesDao().Create(eventAttendees);
             }
         }
