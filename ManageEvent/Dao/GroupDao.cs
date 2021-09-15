@@ -42,6 +42,7 @@ namespace ManageEvent.Dao {
             SqlConnection connection = Connection.createConnection();
             String query = "Update tblGroup Set name = @name , description = @description Where id = @id";
             SqlCommand cmd = new SqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("@id", group.Id);
             cmd.Parameters.AddWithValue("@name", group.Name);
             cmd.Parameters.AddWithValue("@description", group.Description);
             try {

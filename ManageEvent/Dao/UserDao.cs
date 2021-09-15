@@ -55,9 +55,9 @@ namespace ManageEvent.Dao {
             cmd.Parameters.AddWithValue("@Email", user.Email);
             cmd.Parameters.AddWithValue("@Name", user.Name);
             cmd.Parameters.AddWithValue("@Password", user.Password);
-            cmd.Parameters.AddWithValue("@Token", EncryptionMD5.GetHash(user.Email));
+            cmd.Parameters.AddWithValue("@Token", EncryptionMD5.GetHash(user.Email + "" + user.Password));
             cmd.Parameters.AddWithValue("@Type", user.Type);
-            cmd.Parameters.AddWithValue("@Status", user.Status);
+            cmd.Parameters.AddWithValue("@Status", 1);
             try {
                 connection.Open();
                 if (cmd.ExecuteNonQuery() == 1) {
@@ -76,19 +76,21 @@ namespace ManageEvent.Dao {
             SqlConnection connection = Connection.createConnection();
             string query = "Select Token From tblUser Where Email = @Email And Password = @Password And Status = 1";
             SqlCommand cmd = new SqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("@Email", user.Email);
+            cmd.Parameters.AddWithValue("@Password", user.Password);
             try {
                 connection.Open();
                 SqlDataReader dataReader = cmd.ExecuteReader();
                 if (dataReader.Read()) {
                     token = dataReader.GetString(0);
                 }
-            } catch(SqlException se) {
+            } catch (SqlException se) {
                 throw new Exception(se.Message);
             } finally {
                 connection.Close();
             }
             return token;
-           
+
         }
 
 

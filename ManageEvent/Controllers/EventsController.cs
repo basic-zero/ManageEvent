@@ -33,7 +33,6 @@ namespace ManageEvent.Controllers {
 
         }
 
-
         // POST api/<EventsController>
         [HttpPost]
         public void Post([FromBody] EventForPost eventForPost) {
