@@ -18,8 +18,8 @@ namespace ManageEvent.Dao
             List<EventAttendees> list = null;
             EventAttendees eventAttendees;
             string query = "SELECT name, email, other, status, groupID, id " +
-                "FROM tblEventAttendees te " +
-                "WHERE te.groupID = @groupID";
+                "FROM tblEventAttendees " +
+                "WHERE groupID = @groupID";
             SqlCommand cmd = new SqlCommand(query, connection);
             cmd.Parameters.AddWithValue("@groupID", groupID);
             try
