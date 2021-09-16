@@ -4,23 +4,26 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace ManageEvent.Dto {
-    public class Event {
-        public Event() {
+    public class Group {
+        public Group() {
         }
 
-        public Event(int id, string name, string description, List<CheckIn> checkIns, string status) {
+        public Group(int id, string name, string description, bool status, List<EventAttendees> eventAttendees) {
             Id = id;
             Name = name;
             Description = description;
-            this.checkIns = checkIns;
             Status = status;
+            this.eventAttendees = eventAttendees;
         }
 
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public List<CheckIn> checkIns { get; set; }
+        public bool Status { get; set; }
         public int UserId { get; set; }
-        public string Status { get; set; }
+        public List<EventAttendees> eventAttendees { get; set; }
     }
+
+
+
 }

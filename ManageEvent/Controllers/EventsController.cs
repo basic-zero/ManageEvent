@@ -9,14 +9,11 @@ using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace ManageEvent.Controllers
-{
+namespace ManageEvent.Controllers {
     [Route("api/[controller]")]
     [ApiController]
-    public class EventsController : ControllerBase
-    {
-        public EventsController(IConfiguration configuration)
-        {
+    public class EventsController : ControllerBase {
+        public EventsController(IConfiguration configuration) {
             _configuration = configuration;
         }
 
@@ -43,6 +40,8 @@ namespace ManageEvent.Controllers
             
         }
 
+
+        }
 
         // POST api/<EventsController>
         [HttpPost]

@@ -3,16 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ManageEvent.Dto
-{
-    public class CheckIn
-    {
-        public CheckIn()
-        {
+namespace ManageEvent.Dto {
+    public class CheckIn {
+        public CheckIn() {
         }
 
-        public CheckIn(int id, string name, string email, string other)
-        {
+        public CheckIn(int id, string name, string email, string other) {
             Id = id;
             Name = name;
             Email = email;
