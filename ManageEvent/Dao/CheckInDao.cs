@@ -17,14 +17,14 @@ namespace ManageEvent.Dao
             CheckIn checkIn;
             string query = "SELECT name, email, other, status, id " +
                 "FROM tblCheckIn " +
-                "WHERE eventId = @eventId";
+                "WHERE eventId = @eventId and status = 1";
             SqlCommand cmd = new SqlCommand(query, connection);
             cmd.Parameters.AddWithValue("@eventId", eventId);
             try
             {
+                list = new List<CheckIn>();
                 connection.Open();
                 SqlDataReader dataReader = cmd.ExecuteReader();
-                list = new List<CheckIn>();
                 while (dataReader.Read())
                 {
                     checkIn = new CheckIn();
@@ -33,12 +33,9 @@ namespace ManageEvent.Dao
                     checkIn.Other = dataReader.GetString(2);
                     checkIn.Status = dataReader.GetBoolean(3);
                     checkIn.Id = dataReader.GetInt32(4);
+                    checkIn.EventId = eventId;
                     list.Add(checkIn);
                 }
-            }
-            catch (Exception e)
-            {
-                e.ToString();
             }
             finally
             {
@@ -61,10 +58,6 @@ namespace ManageEvent.Dao
             {
                 connection.Open();
                 check = cmd.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                e.ToString();
             }
             finally
             {
