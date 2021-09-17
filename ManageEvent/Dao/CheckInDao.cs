@@ -50,7 +50,7 @@ namespace ManageEvent.Dao
         {
             SqlConnection connection = Connection.createConnection();
             int check = 0;
-            string query = "INSERT INTO dbo.tblEventAttendees(eventId, name, email, other, status) " +
+            string query = "INSERT INTO dbo.tblCheckIn(eventId, name, email, other, status) " +
                 "Values(@eventId, @name, @email, @other, 0)";
             SqlCommand cmd = new SqlCommand(query, connection);
             cmd.Parameters.AddWithValue("@eventId", checkIn.EventId);
