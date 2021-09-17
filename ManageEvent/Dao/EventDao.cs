@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 
+
 namespace ManageEvent.Dao
 {
     public class EventDao
@@ -19,13 +20,11 @@ namespace ManageEvent.Dao
             SqlCommand cmd = new SqlCommand(query, connection);
             cmd.Parameters.AddWithValue("@userName", userId);
             cmd.Parameters.AddWithValue("@search", "%" + search + "%");
-            try
-            {
+            try {
                 connection.Open();
                 SqlDataReader dataReader = cmd.ExecuteReader();
                 events = new List<Event>();
-                while (dataReader.Read())
-                {
+                while (dataReader.Read()) {
                     Event newEvent = new Event();
                     newEvent.Id = dataReader.GetInt32(0);
                     newEvent.Name = dataReader.GetString(1);
@@ -40,6 +39,7 @@ namespace ManageEvent.Dao
             }
             return events;
         }
+
 
         public bool Create(Event dto)
         {
@@ -106,3 +106,4 @@ namespace ManageEvent.Dao
     }
 
 }
+
