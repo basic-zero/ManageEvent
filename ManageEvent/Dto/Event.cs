@@ -22,5 +22,6 @@ namespace ManageEvent.Dto {
         public List<CheckIn> checkIns { get; set; }
         public int UserId { get; set; }
         public string Status { get; set; }
+        public DateTime EventDateAt { get; set; }
     }
 }

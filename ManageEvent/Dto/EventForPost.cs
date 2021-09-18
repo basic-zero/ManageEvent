@@ -11,5 +11,6 @@ namespace ManageEvent.Dto
         public string Description { get; set; }
         public int UserId { get; set; }
         public string Token { get; set; }
+        public DateTime EventDateAt { get; set; }
     }
 }
