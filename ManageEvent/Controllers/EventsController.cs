@@ -9,11 +9,14 @@ using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace ManageEvent.Controllers {
+namespace ManageEvent.Controllers
+{
     [Route("api/[controller]")]
     [ApiController]
-    public class EventsController : ControllerBase {
-        public EventsController(IConfiguration configuration) {
+    public class EventsController : ControllerBase
+    {
+        public EventsController(IConfiguration configuration)
+        {
             _configuration = configuration;
         }
 
@@ -22,9 +25,9 @@ namespace ManageEvent.Controllers {
         [HttpGet("{id}/{token}")]
         public IEnumerable<Event> Get(int id, string token)
         {
-            try 
-            { 
-                if(new UserDao().Authentication(token))
+            try
+            {
+                if (new UserDao().Authentication(token))
                 {
                     return new EventDao().GetEventList(id, "").ToArray();
                 }
@@ -37,11 +40,11 @@ namespace ManageEvent.Controllers {
             {
                 return null;
             }
-            
+
         }
 
 
-        }
+
 
         // POST api/<EventsController>
         [HttpPost]
@@ -53,6 +56,7 @@ namespace ManageEvent.Controllers {
                 newEvent.Name = eventForPost.Name;
                 newEvent.Description = eventForPost.Description;
                 newEvent.UserId = eventForPost.UserId;
+                newEvent.EventDateAt = eventForPost.EventDateAt;
                 new EventDao().Create(newEvent);
             }
         }
@@ -66,6 +70,7 @@ namespace ManageEvent.Controllers {
                 Event newEvent = new Event();
                 newEvent.Name = eventForPut.Name;
                 newEvent.Description = eventForPut.Description;
+                newEvent.EventDateAt = eventForPut.EventDateAt;
                 newEvent.Id = id;
                 new EventDao().Update(newEvent);
             }

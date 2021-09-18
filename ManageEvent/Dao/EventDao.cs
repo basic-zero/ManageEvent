@@ -16,7 +16,7 @@ namespace ManageEvent.Dao
         {
             SqlConnection connection = Connection.createConnection();
             List<Event> events = null;
-            string query = "SELECT id,name,description,status FROM dbo.tblEvent WHERE userID=@userName And status!='deleted' And name like @search And status != 'checked in'";
+            string query = "SELECT id,name,description,status, event_date_at FROM dbo.tblEvent WHERE userID=@userName And status!='deleted' And name like @search And status != 'checked in'";
             SqlCommand cmd = new SqlCommand(query, connection);
             cmd.Parameters.AddWithValue("@userName", userId);
             cmd.Parameters.AddWithValue("@search", "%" + search + "%");
@@ -30,6 +30,7 @@ namespace ManageEvent.Dao
                     newEvent.Name = dataReader.GetString(1);
                     newEvent.Description = dataReader.GetString(2);
                     newEvent.Status = dataReader.GetString(3);
+                    newEvent.EventDateAt = dataReader.GetDateTime(4);
                     events.Add(newEvent);
                 }
             }
@@ -44,10 +45,11 @@ namespace ManageEvent.Dao
         public bool Create(Event dto)
         {
             SqlConnection connection = Connection.createConnection();
-            SqlCommand cmd = new SqlCommand("Insert Into tblEvent(name,description,userId, status) VALUES(@name,@description,@userID,@status);", connection);
+            SqlCommand cmd = new SqlCommand("Insert Into tblEvent(name,description,userId, status, event_date_at) VALUES(@name,@description,@userID,@status,@eventDateAt);", connection);
             cmd.Parameters.AddWithValue("@name", dto.Name);
             cmd.Parameters.AddWithValue("@description", dto.Description);
             cmd.Parameters.AddWithValue("@userID", dto.UserId);
+            cmd.Parameters.AddWithValue("@eventDateAt", dto.EventDateAt);
             cmd.Parameters.AddWithValue("@status", "new");
             int count = 0;
             try
@@ -85,9 +87,10 @@ namespace ManageEvent.Dao
         public bool Update(Event dto)
         {
             SqlConnection connection = Connection.createConnection();
-            SqlCommand cmd = new SqlCommand("Update tblEvent set name=@name,description=@description where id=@id;", connection);
+            SqlCommand cmd = new SqlCommand("Update tblEvent set name=@name,description=@description, event_date_at=@eventDateAt where id=@id;", connection);
             cmd.Parameters.AddWithValue("@id", dto.Id);
             cmd.Parameters.AddWithValue("@name", dto.Name);
+            cmd.Parameters.AddWithValue("@eventDateAt", dto.EventDateAt);
             cmd.Parameters.AddWithValue("@description", dto.Description);
             int count = 0;
             try
