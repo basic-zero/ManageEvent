@@ -25,27 +25,103 @@ namespace ManageEvent.Controllers {
             return new UserDao().Authentication(token);
         }
 
-        // POST api/<UsersController>
-        [HttpPost("register/")]
-        public void Post([FromBody] UserRegister user) {
-            User registerUser = new User();
-            registerUser.Email = user.Email;
-            registerUser.Name = user.Name;
-            registerUser.Password = user.Password;
-            registerUser.Type = true;
-            new UserDao().RegisterWithEmailPwd(registerUser);
+        // POST api/registerByEmailPwd
+        // return 0 => "Error"
+        // return 1 => "Ok"
+        // return 2 => "Email đã tồn tại"
+        [HttpPost("registerByEmailPwd/")]
+        public int Post([FromBody] UserRegister user) {
+            int result = 0;
+            try {
+                User registerUser = new User();
+                registerUser.Email = user.Email;
+                registerUser.Name = user.Name;
+                registerUser.Password = user.Password;
+                if (new UserDao().RegisterWithEmailPwd(registerUser)) {
+                    result = 1;
+                }
+            } catch (Exception e) {
+                if (e.Message.Contains("Cannot insert duplicate key in object 'dbo.tblUser'")) {
+                    result = 2;
+                }
+            }
+            return result;
         }
 
-        [HttpPost("login/")]
-        public string Post([FromBody] UserLogin user) {
-            string token = null;
-            User loginUser = new User();
-            loginUser.Email = user.Email;
-            loginUser.Password = user.Password;
-            loginUser.Type = true;
-            token = new UserDao().LoginWithEmailPwd(loginUser);
-            return token;
+        // POST api/registerByGG
+        // return 0 => "Error"
+        // return 1 => "Ok"
+        // return 2 => "Email đã được đăng ký"
+        [HttpPost("registerByGG/")]
+        public int Post([FromBody] UserRegisterByGG user) {
+            int result = 0;
+            try {
+                User registerUser = new User();
+                registerUser.Email = user.Email;
+                registerUser.Name = user.Name;
+                registerUser.Token = user.Token;
+                if (new UserDao().RegisterWithGG(registerUser, registerUser.Token)) {
+                    result = 1;
+                }
+            } catch (Exception e) {
+                if (e.Message.Contains("Cannot insert duplicate key in object 'dbo.tblUser'")) {
+                    result = 2;
+                }
+            }
+            return result;
+
         }
+
+        // POST api/loginByEmailPwd
+        // return 0 => "Error"
+        // return <token> => "Ok"
+        // return 2 => "Email không tồn tại"
+        // return 3 => "Sai loại account"
+        // return 4 => "Sai mật khẩu"
+        [HttpPost("loginByEmailPwd/")]
+        public string Post([FromBody] UserLogin user) {
+
+            string result = "0";
+            try {
+                User loginUser = new User();
+                loginUser.Email = user.Email;
+                loginUser.Password = user.Password;
+                loginUser.Type = true;
+                result = new UserDao().LoginWithEmailPwd(loginUser);
+            } catch (Exception e) {
+                if (e.Message.Contains("email does not exist")) {
+                    result = "2";
+                } else if (e.Message.Contains("incorrect type of account")) {
+                    result = "3";
+                } else if (e.Message.Contains("incorrect password")) {
+                    result = "4";
+                }
+            }
+            return result;
+        }
+        // return 0 => "Error"
+        // return 1 => "Ok"
+        // return 2 => "Email không tồn tại"
+        // return 3 => "Sai loại account"
+        [HttpPost("loginByGG/")]
+        public int Post([FromBody] string token) {
+            int result = 0;
+            try {
+                if (new UserDao().LoginWithGG(token)) {
+                    result = 1;
+                }
+            } catch (Exception e) {
+                if (e.Message.Contains("incorrect type of account")) {
+                    result = 3;
+                }
+                if (e.Message.Contains("email does not exist")) {
+                    result = 2;
+                }
+            }
+            return result;
+        }
+
+
 
         // PUT api/<UsersController>/5
         //[HttpPut("{id}")]

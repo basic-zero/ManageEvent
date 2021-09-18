@@ -29,9 +29,7 @@ namespace ManageEvent.Dao {
                     newGroup.UserId = userId;
                     groups.Add(newGroup);
                 }
-            } catch (SqlException se) {
-                throw new Exception(se.Message);
-            } finally {
+            }  finally {
                 connection.Close();
             }
             return groups;
@@ -50,9 +48,7 @@ namespace ManageEvent.Dao {
                 if (cmd.ExecuteNonQuery() > 0) {
                     check = true;
                 }
-            } catch (SqlException se) {
-                throw new Exception(se.Message);
-            } finally {
+            }  finally {
                 connection.Close();
             }
             return check;   
@@ -72,9 +68,7 @@ namespace ManageEvent.Dao {
                 if (cmd.ExecuteNonQuery() > 0) {
                     check = true;
                 }
-            } catch (SqlException se) {
-                throw new Exception(se.Message);
-            } finally {
+            }  finally {
                 connection.Close();
             }
             return check;
@@ -91,9 +85,7 @@ namespace ManageEvent.Dao {
                 if (cmd.ExecuteNonQuery() > 0) {
                     check = true;
                 }
-            } catch (SqlException se) {
-                throw new Exception(se.Message);
-            } finally {
+            }  finally {
                 connection.Close();
             }
             return check;

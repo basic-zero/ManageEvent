@@ -25,47 +25,46 @@ namespace ManageEvent.Dao {
         }
 
 
-        public bool RegisterWithGG(User user, String token) {
-            bool check = false;
-            SqlConnection connection = Connection.createConnection();
-            string query = "Insert into tblUser(Email, Name, Token, Status, Type) Values (@Email,@Name, @Token,@Status, @Type)";
-            SqlCommand cmd = new SqlCommand(query, connection);
-            cmd.Parameters.AddWithValue("@Email", user.Email);
-            cmd.Parameters.AddWithValue("@Name", user.Name);
-            cmd.Parameters.AddWithValue("@Token", token);
-            cmd.Parameters.AddWithValue("@Type", user.Type);
-            try {
-                connection.Open();
-                if (cmd.ExecuteNonQuery() == 1) {
-                    check = true;
-                }
-            } catch (SqlException se) {
-                throw new Exception(se.Message);
-            } finally {
-                connection.Close();
-            }
-            return check;
-        }
+
 
         public bool RegisterWithEmailPwd(User user) {
             bool check = false;
             SqlConnection connection = Connection.createConnection();
-            string query = "Insert into tblUser(Email, Name, Password, Token, Status, Type) Values(@Email, @Name, @Password, @Token, @Status, @Type)";
+            string query = "Insert into tblUser(email, name, password, token, status, type) Values(@Email, @Name, @Password, @Token, @Status, @Type)";
             SqlCommand cmd = new SqlCommand(query, connection);
             cmd.Parameters.AddWithValue("@Email", user.Email);
             cmd.Parameters.AddWithValue("@Name", user.Name);
             cmd.Parameters.AddWithValue("@Password", user.Password);
             cmd.Parameters.AddWithValue("@Token", EncryptionMD5.GetHash(user.Email + "" + user.Password));
-            cmd.Parameters.AddWithValue("@Type", user.Type);
+            cmd.Parameters.AddWithValue("@Type", 1);
             cmd.Parameters.AddWithValue("@Status", 1);
             try {
                 connection.Open();
                 if (cmd.ExecuteNonQuery() == 1) {
                     check = true;
                 }
-            } catch (SqlException se) {
-                throw new Exception(se.Message);
             } finally {
+                connection.Close();
+            }
+            return check;
+        }
+
+        public bool RegisterWithGG(User user, String token) {
+            bool check = false;
+            SqlConnection connection = Connection.createConnection();
+            string query = "Insert into tblUser(email, name, token, status, type) Values (@Email,@Name, @Token,@Status, @Type)";
+            SqlCommand cmd = new SqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("@Email", user.Email);
+            cmd.Parameters.AddWithValue("@Name", user.Name);
+            cmd.Parameters.AddWithValue("@Token", token);
+            cmd.Parameters.AddWithValue("@Type", 0);
+            cmd.Parameters.AddWithValue("@Status", 1);
+            try {
+                connection.Open();
+                if (cmd.ExecuteNonQuery() == 1) {
+                    check = true;
+                }
+            }  finally {
                 connection.Close();
             }
             return check;
@@ -74,23 +73,157 @@ namespace ManageEvent.Dao {
         public string LoginWithEmailPwd(User user) {
             string token = null;
             SqlConnection connection = Connection.createConnection();
-            string query = "Select Token From tblUser Where Email = @Email And Password = @Password And Status = 1";
-            SqlCommand cmd = new SqlCommand(query, connection);
-            cmd.Parameters.AddWithValue("@Email", user.Email);
-            cmd.Parameters.AddWithValue("@Password", user.Password);
             try {
+                if (checkEmailExist(user.Email)) {
+                    if (!checkEmailType(user.Email, true)) {
+                        throw new Exception("incorrect type of account");
+                    }
+                    if (!checkEmailPwd(user.Email, user.Password)) {
+                        throw new Exception("incorrect password");
+                    }
+                } else {
+                    throw new Exception("email does not exist");
+                }
                 connection.Open();
+                string query = "Select token From tblUser Where  email = @Email And password = @Password And type = @Type And status = @Status";
+                SqlCommand cmd = new SqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@Email", user.Email);
+                cmd.Parameters.AddWithValue("@Password", user.Password);
+                cmd.Parameters.AddWithValue("@Type", 1);
+                cmd.Parameters.AddWithValue("@Status", 1);
                 SqlDataReader dataReader = cmd.ExecuteReader();
                 if (dataReader.Read()) {
                     token = dataReader.GetString(0);
                 }
-            } catch (SqlException se) {
-                throw new Exception(se.Message);
-            } finally {
+            }  finally {
                 connection.Close();
             }
             return token;
 
+        }
+
+        public bool LoginWithGG(String token) {
+            SqlConnection connection = Connection.createConnection();
+            string query = "Select name From tblUser Where token=@Token And type = @Type And status = @Status";
+            SqlCommand cmd = new SqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("@Token", token);
+            cmd.Parameters.AddWithValue("@Type", 0);
+            cmd.Parameters.AddWithValue("@Status", 1);
+
+            bool result = false;
+            try {
+                if (checkTokenExist(token)) {
+                    if (!checkTokenType(token, false)) {
+                        throw new Exception("incorrect type of account");
+                    }
+                } else {
+                    throw new Exception("email does not exist");
+                }
+               
+                connection.Open();
+                SqlDataReader dataReader = cmd.ExecuteReader();
+                result = dataReader.Read();
+            } finally {
+                connection.Close();
+            }
+            return result;
+        }
+
+        private bool checkEmailType(string email, bool type) {
+            bool result = false;
+            SqlConnection connection = Connection.createConnection();
+            try {
+                connection.Open();
+                string query = "Select token From tblUser Where email = @Email And status = @Status And type = @Type";
+                SqlCommand cmd = new SqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@Email", email);
+                cmd.Parameters.AddWithValue("@Type", type);
+                cmd.Parameters.AddWithValue("@Status", 1);
+                SqlDataReader dataReader = cmd.ExecuteReader();
+                if (dataReader.Read()) {
+                    result = true;
+                }
+            } finally {
+                connection.Close();
+            }
+            return result;
+        }
+
+        private bool checkTokenType(string token,bool type) {
+            bool result = false;
+            SqlConnection connection = Connection.createConnection();
+            try {
+                connection.Open();
+                string query = "Select token From tblUser Where token = @Token And status = @Status And type = @Type";
+                SqlCommand cmd = new SqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@Token", token);
+                cmd.Parameters.AddWithValue("@Type", type);
+                cmd.Parameters.AddWithValue("@Status", 1);
+                SqlDataReader dataReader = cmd.ExecuteReader();
+                if (dataReader.Read()) {
+                    result = true;
+                }
+            } finally {
+                connection.Close();
+            }
+            return result;
+        }
+
+        private bool checkTokenExist(string token) {
+            bool result = false;
+            SqlConnection connection = Connection.createConnection();
+            try {
+                connection.Open();
+                string query = "Select token From tblUser Where token = @Token And status = @Status";
+                SqlCommand cmd = new SqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@Token", token);
+                cmd.Parameters.AddWithValue("@Status", 1);
+                SqlDataReader dataReader = cmd.ExecuteReader();
+                if (dataReader.Read()) {
+                    result = true;
+                }
+            } finally {
+                connection.Close();
+            }
+            return result;
+        }
+
+
+        private bool checkEmailPwd(string email, string password) {
+            bool result = false;
+            SqlConnection connection = Connection.createConnection();
+            try {
+                connection.Open();
+                string query = "Select token From tblUser Where email = @Email And password = @Password";
+                SqlCommand cmd = new SqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@Email", email);
+                cmd.Parameters.AddWithValue("@Password", password);
+                SqlDataReader dataReader = cmd.ExecuteReader();
+                if (dataReader.Read()) {
+                    result = true;
+                }
+            } finally {
+                connection.Close();
+            }
+            return result;
+        }
+
+        private bool checkEmailExist(string email) {
+            bool result = false;
+            SqlConnection connection = Connection.createConnection();
+            try {
+                connection.Open();
+                string query = "Select token From tblUser Where email = @Email";
+                SqlCommand cmd = new SqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@Email", email);
+                SqlDataReader dataReader = cmd.ExecuteReader();
+                if (dataReader.Read()) {
+                    result = true;
+                }
+            } finally {
+                connection.Close();
+            }
+            return result;
         }
 
 
