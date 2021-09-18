@@ -20,23 +20,35 @@ namespace ManageEvent.Controllers {
         IConfiguration _configuration;
         // GET: api/<EventsController>
         [HttpGet("{id}/{token}")]
-        public IEnumerable<Event> Get(int id, string token) {
-            try {
-                if (new UserDao().Authentication(token)) {
+        public IEnumerable<Event> Get(int id, string token)
+        {
+            try 
+            { 
+                if(new UserDao().Authentication(token))
+                {
                     return new EventDao().GetEventList(id, "").ToArray();
-                } else {
+                }
+                else
+                {
                     return null;
                 }
-            } catch {
+            }
+            catch
+            {
                 return null;
             }
+            
+        }
+
 
         }
 
         // POST api/<EventsController>
         [HttpPost]
-        public void Post([FromBody] EventForPost eventForPost) {
-            if (new UserDao().Authentication(eventForPost.Token)) {
+        public void Post([FromBody] EventForPost eventForPost)
+        {
+            if (new UserDao().Authentication(eventForPost.Token))
+            {
                 Event newEvent = new Event();
                 newEvent.Name = eventForPost.Name;
                 newEvent.Description = eventForPost.Description;
@@ -47,8 +59,10 @@ namespace ManageEvent.Controllers {
 
         // PUT api/<EventsController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] EventForPut eventForPut) {
-            if (new UserDao().Authentication(eventForPut.Token)) {
+        public void Put(int id, [FromBody] EventForPut eventForPut)
+        {
+            if (new UserDao().Authentication(eventForPut.Token))
+            {
                 Event newEvent = new Event();
                 newEvent.Name = eventForPut.Name;
                 newEvent.Description = eventForPut.Description;
@@ -59,8 +73,10 @@ namespace ManageEvent.Controllers {
 
         // DELETE api/<EventsController>/5
         [HttpDelete("{id}/{token}")]
-        public void Delete(int id, string token) {
-            if (new UserDao().Authentication(token)) {
+        public void Delete(int id, string token)
+        {
+            if (new UserDao().Authentication(token))
+            {
                 new EventDao().DeleteById(id);
             }
         }
