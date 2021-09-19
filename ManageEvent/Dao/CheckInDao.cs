@@ -104,5 +104,24 @@ namespace ManageEvent.Dao
 
             return count == 1;
         }
+
+        public bool CheckIn(int id)
+        {
+            SqlConnection connection = Connection.createConnection();
+            SqlCommand cmd = new SqlCommand("UPDATE tblCheckIn SET status=1 WHERE id=@id", connection);
+            cmd.Parameters.AddWithValue("@id", id);
+            int count = 0;
+            try
+            {
+                connection.Open();
+                count = cmd.ExecuteNonQuery();
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+            return count == 1;
+        }
     }
 }

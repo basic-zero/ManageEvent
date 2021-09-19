@@ -38,6 +38,15 @@ namespace ManageEvent.Controllers
                 return null;
             }
         }
+
+        [HttpPut("checkInQR/{id}")]
+        public void Put(int id,[FromBody] string token)
+        {
+            if (new UserDao().Authentication(token))
+            {
+                new CheckInDao().CheckIn(id);
+            }
+        }
         // POST api/<CheckInController>
         [HttpPost]
         public void Post([FromBody] CheckInForPost checkInForPost)
