@@ -17,7 +17,7 @@ namespace ManageEvent.Dao
             CheckIn checkIn;
             string query = "SELECT name, email, other, status, id " +
                 "FROM tblCheckIn " +
-                "WHERE eventId = @eventId and status = 1";
+                "WHERE eventId = @eventId";
             SqlCommand cmd = new SqlCommand(query, connection);
             cmd.Parameters.AddWithValue("@eventId", eventId);
             try
