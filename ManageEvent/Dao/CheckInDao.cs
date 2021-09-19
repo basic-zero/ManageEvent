@@ -48,7 +48,7 @@ namespace ManageEvent.Dao
             SqlConnection connection = Connection.createConnection();
             int check = 0;
             string query = "INSERT INTO dbo.tblCheckIn(eventId, name, email, other, status) " +
-                "Values(@eventId, @name, @email, @other, 1)";
+                "Values(@eventId, @name, @email, @other, 0)";
             SqlCommand cmd = new SqlCommand(query, connection);
             cmd.Parameters.AddWithValue("@eventId", checkIn.EventId);
             cmd.Parameters.AddWithValue("@name", checkIn.Name);
@@ -68,7 +68,7 @@ namespace ManageEvent.Dao
         public bool DeleteById(int Id)
         {
             SqlConnection connection = Connection.createConnection();
-            SqlCommand cmd = new SqlCommand("UPDATE tblCheckIn SET status='False' WHERE id=@id", connection);
+            SqlCommand cmd = new SqlCommand("DELETE FROM tblCheckIn WHERE id=@id", connection);
             cmd.Parameters.AddWithValue("@id", Id);
             int count = 0;
             try
