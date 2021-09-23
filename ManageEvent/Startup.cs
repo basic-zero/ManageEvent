@@ -27,6 +27,7 @@ namespace ManageEvent
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddSwaggerGen();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -36,7 +37,17 @@ namespace ManageEvent
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseSwagger(c =>
+            {
+                c.SerializeAsV2 = true;
+            });
 
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
             app.UseHttpsRedirection();
 
             app.UseRouting();
