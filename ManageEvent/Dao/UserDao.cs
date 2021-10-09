@@ -70,8 +70,9 @@ namespace ManageEvent.Dao {
             return check;
         }
 
-        public string LoginWithEmailPwd(User user) {
+        public UserForLogin LoginWithEmailPwd(User user) {
             string token = null;
+            UserForLogin userForLogin = new UserForLogin();
             SqlConnection connection = Connection.createConnection();
             try {
                 if (checkEmailExist(user.Email)) {
@@ -85,7 +86,7 @@ namespace ManageEvent.Dao {
                     throw new Exception("email does not exist");
                 }
                 connection.Open();
-                string query = "Select token From tblUser Where  email = @Email And password = @Password And type = @Type And status = @Status";
+                string query = "Select token, id From tblUser Where  email = @Email And password = @Password And type = @Type And status = @Status";
                 SqlCommand cmd = new SqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@Email", user.Email);
                 cmd.Parameters.AddWithValue("@Password", user.Password);
@@ -93,12 +94,13 @@ namespace ManageEvent.Dao {
                 cmd.Parameters.AddWithValue("@Status", 1);
                 SqlDataReader dataReader = cmd.ExecuteReader();
                 if (dataReader.Read()) {
-                    token = dataReader.GetString(0);
+                    userForLogin.Token = dataReader.GetString(0);
+                    userForLogin.Id = dataReader.GetInt32(1);
                 }
             }  finally {
                 connection.Close();
             }
-            return token;
+            return userForLogin;
 
         }
 

@@ -57,11 +57,10 @@ namespace ManageEvent.Dao {
         public bool Create(Group group) {
             bool check = false;
             SqlConnection connection = Connection.createConnection();
-            String query = "Insert into tblGroup(name,description,status,userId) Values(@name,@description,@status,@userId)";
+            String query = "Insert into tblGroup(name,description,status,userId) Values(@name,@description,1,@userId)";
             SqlCommand cmd = new SqlCommand(query, connection);
             cmd.Parameters.AddWithValue("@name", group.Name);
             cmd.Parameters.AddWithValue("@description", group.Description);
-            cmd.Parameters.AddWithValue("@status", group.Status);
             cmd.Parameters.AddWithValue("@userId", group.UserId);
             try {
                 connection.Open();

@@ -24,9 +24,9 @@ namespace ManageEvent.Dao
             cmd.Parameters.AddWithValue("@groupID", groupID);
             try
             {
+                list = new List<EventAttendees>();
                 connection.Open();
                 SqlDataReader dataReader = cmd.ExecuteReader();
-                list = new List<EventAttendees>();
                 while (dataReader.Read())
                 {
                     eventAttendees = new EventAttendees();

@@ -22,9 +22,9 @@ namespace ManageEvent.Dto
         }
 
         public int Id { get; set; }
-        public String Name { get; set; }
-        public String Email { get; set; }
-        public String Other { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string Other { get; set; }
         public int GroupId { get; set; }
         public bool Status { get; set; }
 

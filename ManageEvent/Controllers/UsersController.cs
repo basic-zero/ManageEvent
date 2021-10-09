@@ -74,27 +74,29 @@ namespace ManageEvent.Controllers {
 
         // POST api/loginByEmailPwd
         // return 0 => "Error"
-        // return <token> => "Ok"
+        // return 1 => "Ok"
         // return 2 => "Email không tồn tại"
         // return 3 => "Sai loại account"
         // return 4 => "Sai mật khẩu"
         [HttpPost("loginByEmailPwd/")]
-        public string Post([FromBody] UserLogin user) {
+        public UserForLogin Post([FromBody] UserLogin user) {
 
-            string result = "0";
+            UserForLogin result = null;
             try {
                 User loginUser = new User();
                 loginUser.Email = user.Email;
                 loginUser.Password = user.Password;
                 loginUser.Type = true;
                 result = new UserDao().LoginWithEmailPwd(loginUser);
-            } catch (Exception e) {
+                result.Status = 1;
+            } catch (Exception e) { 
+                result = new UserForLogin();
                 if (e.Message.Contains("email does not exist")) {
-                    result = "2";
+                    result.Status = 2;
                 } else if (e.Message.Contains("incorrect type of account")) {
-                    result = "3";
+                    result.Status = 3;
                 } else if (e.Message.Contains("incorrect password")) {
-                    result = "4";
+                    result.Status = 4;
                 }
             }
             return result;
