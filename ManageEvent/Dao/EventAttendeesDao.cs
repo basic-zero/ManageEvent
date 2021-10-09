@@ -19,7 +19,7 @@ namespace ManageEvent.Dao
             EventAttendees eventAttendees;
             string query = "SELECT name, email, other, status, groupID, id " +
                 "FROM tblEventAttendees " +
-                "WHERE groupID = @groupID AND status = 'True''";
+                "WHERE groupID = @groupID AND status = 1";
             SqlCommand cmd = new SqlCommand(query, connection);
             cmd.Parameters.AddWithValue("@groupID", groupID);
             try
@@ -38,10 +38,6 @@ namespace ManageEvent.Dao
                     eventAttendees.Id = dataReader.GetInt32(5);
                     list.Add(eventAttendees);
                 }
-            }
-            catch(Exception e)
-            { 
-                e.ToString();
             }
             finally 
             { 
