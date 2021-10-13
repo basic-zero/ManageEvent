@@ -61,6 +61,16 @@ namespace ManageEvent.Controllers
             }
         }
 
+        [HttpPost("mail/")]
+        public void Post([FromBody] Email email)
+        {
+            if (new UserDao().Authentication(email.Token))
+            {
+                new EventDao().SendEmail(email);
+            }
+        }
+
+
         // PUT api/<EventsController>/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] EventForPut eventForPut)

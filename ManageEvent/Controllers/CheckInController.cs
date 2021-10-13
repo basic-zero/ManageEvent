@@ -47,7 +47,8 @@ namespace ManageEvent.Controllers
                 new CheckInDao().CheckIn(id);
             }
         }
-        // POST api/<CheckInController>
+
+
         [HttpPost]
         public void Post([FromBody] CheckInForPost checkInForPost)
         {
@@ -59,6 +60,20 @@ namespace ManageEvent.Controllers
                 checkIn.Email = checkInForPost.Email;
                 checkIn.Other = checkInForPost.Other;
                 new CheckInDao().Create(checkIn);
+            }
+        }
+
+        // POST api/<CheckInController>
+        [HttpPost("copyFromAttendees")]
+        public void Post([FromBody] CheckInForCopy checkInForCopy)
+        {
+            if (new UserDao().Authentication(checkInForCopy.Token))
+            {
+                var checkInList = new EventAttendeesDao().GetAllEventAttendees(checkInForCopy.GroupId);
+                foreach(EventAttendees eventAttendees in checkInList)
+                {
+                    new CheckInDao().Create(eventAttendees, checkInForCopy.EventId);
+                }
             }
         }
 
@@ -76,6 +91,7 @@ namespace ManageEvent.Controllers
                 new CheckInDao().Update(checkIn);
             }
         }
+
 
         // DELETE api/<CheckInController>/id
         [HttpDelete("{id}/{token}")]

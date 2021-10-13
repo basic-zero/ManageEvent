@@ -3,6 +3,7 @@ using ManageEvent.Util;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -39,6 +40,19 @@ namespace ManageEvent.Dao
                 connection.Close();
             }
             return events;
+        }
+
+        public void SendEmail(Email dto)
+        {
+            CheckInDao checkInDao = new CheckInDao();
+            var checkInLisst= checkInDao.GetAll(dto.EventId);
+            foreach(CheckIn checkIn in checkInLisst)
+            {
+                QRModuleLib.QRModule.CreateQRCode(checkIn.Name+"|"+ checkIn.Email, checkIn.Name+".png", dto.EventId.ToString());
+                string root = AppContext.BaseDirectory;
+                EmailLibrary.Email.SendEMail("checkInQRCodeApp@gmail.com", "check123456", checkIn.Email, dto.Subject, dto.Body, root+dto.EventId+"\\"+checkIn.Name+".png");
+                File.Delete(root + dto.EventId + "\\"+ checkIn.Name + ".png");
+            }
         }
 
 

@@ -43,6 +43,29 @@ namespace ManageEvent.Dao
             }
             return list;
         }
+        public bool Create(EventAttendees checkIn, int eventId)
+        {
+            SqlConnection connection = Connection.createConnection();
+            int check = 0;
+            string query = "INSERT INTO dbo.tblCheckIn(eventId, name, email, other, status) " +
+                "Values(@eventId, @name, @email, @other, 0)";
+            SqlCommand cmd = new SqlCommand(query, connection);
+            cmd.Parameters.AddWithValue("@eventId", eventId);
+            cmd.Parameters.AddWithValue("@name", checkIn.Name);
+            cmd.Parameters.AddWithValue("@email", checkIn.Email);
+            cmd.Parameters.AddWithValue("@other", checkIn.Other);
+            try
+            {
+                connection.Open();
+                check = cmd.ExecuteNonQuery();
+            }
+            finally
+            {
+                connection.Close();
+            }
+            return check == 1;
+        }
+
         public bool Create(CheckIn checkIn)
         {
             SqlConnection connection = Connection.createConnection();
@@ -65,6 +88,7 @@ namespace ManageEvent.Dao
             }
             return check == 1;
         }
+
         public bool DeleteById(int Id)
         {
             SqlConnection connection = Connection.createConnection();
