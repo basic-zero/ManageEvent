@@ -53,19 +53,22 @@ namespace ManageEvent.Controllers {
         // return 1 => "Ok"
         // return 2 => "Email đã được đăng ký"
         [HttpPost("registerByGG/")]
-        public int Post([FromBody] UserRegisterByGG user) {
-            int result = 0;
+        public UserForLogin Post([FromBody] UserRegisterByGG user) {
+            UserForLogin result = new UserForLogin();
+            result.Status = 0;
             try {
                 User registerUser = new User();
                 registerUser.Email = user.Email;
                 registerUser.Name = user.Name;
                 registerUser.Token = user.Token;
-                if (new UserDao().RegisterWithGG(registerUser, registerUser.Token)) {
-                    result = 1;
+                UserDao userDao = new UserDao();
+                if (userDao.RegisterWithGG(registerUser, registerUser.Token)) {
+                    result = userDao.LoginWithGG(registerUser.Token);
+                    result.Status = 1;
                 }
             } catch (Exception e) {
                 if (e.Message.Contains("Cannot insert duplicate key in object 'dbo.tblUser'")) {
-                    result = 2;
+                    result.Status = 2;
                 }
             }
             return result;
@@ -106,18 +109,18 @@ namespace ManageEvent.Controllers {
         // return 2 => "Email không tồn tại"
         // return 3 => "Sai loại account"
         [HttpPost("loginByGG/")]
-        public int Post([FromBody] string token) {
-            int result = 0;
+        public UserForLogin Post([FromBody] UserLoginGG user) {
+            UserForLogin result = new UserForLogin();
+            result.Status = 0;
             try {
-                if (new UserDao().LoginWithGG(token)) {
-                    result = 1;
-                }
+                result = new UserDao().LoginWithGG(user.Token);
+                result.Status = 1;
             } catch (Exception e) {
                 if (e.Message.Contains("incorrect type of account")) {
-                    result = 3;
+                    result.Status = 3;
                 }
                 if (e.Message.Contains("email does not exist")) {
-                    result = 2;
+                    result.Status = 2;
                 }
             }
             return result;
