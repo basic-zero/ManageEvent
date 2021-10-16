@@ -104,9 +104,10 @@ namespace ManageEvent.Dao {
 
         }
 
-        public bool LoginWithGG(String token) {
+        public UserForLogin LoginWithGG(String token) {
+            UserForLogin userForLogin = new UserForLogin();
             SqlConnection connection = Connection.createConnection();
-            string query = "Select name From tblUser Where token=@Token And type = @Type And status = @Status";
+            string query = "Select token, id From tblUser Where token=@Token And type = @Type And status = @Status";
             SqlCommand cmd = new SqlCommand(query, connection);
             cmd.Parameters.AddWithValue("@Token", token);
             cmd.Parameters.AddWithValue("@Type", 0);
@@ -124,11 +125,14 @@ namespace ManageEvent.Dao {
                
                 connection.Open();
                 SqlDataReader dataReader = cmd.ExecuteReader();
-                result = dataReader.Read();
+                if (dataReader.Read()) {
+                    userForLogin.Token = dataReader.GetString(0);
+                    userForLogin.Id = dataReader.GetInt32(1);
+                }
             } finally {
                 connection.Close();
             }
-            return result;
+            return userForLogin;
         }
 
         private bool checkEmailType(string email, bool type) {
