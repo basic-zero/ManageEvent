@@ -39,12 +39,15 @@ namespace ManageEvent.Controllers
             }
         }
 
-        [HttpPut("checkInQR/{id}")]
-        public void Put(int id,[FromBody] string token)
+        [HttpPut("checkInQR/{id}/{token}/{checkMode}")]
+        public void Put(int id, string token, bool checkMode)
         {
             if (new UserDao().Authentication(token))
             {
+                if(checkMode)
                 new CheckInDao().CheckIn(id);
+                else
+                    new CheckInDao().UnCheckIn(id);
             }
         }
 

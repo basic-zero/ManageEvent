@@ -147,5 +147,23 @@ namespace ManageEvent.Dao
 
             return count == 1;
         }
+        public bool UnCheckIn(int id)
+        {
+            SqlConnection connection = Connection.createConnection();
+            SqlCommand cmd = new SqlCommand("UPDATE tblCheckIn SET status=0 WHERE id=@id", connection);
+            cmd.Parameters.AddWithValue("@id", id);
+            int count = 0;
+            try
+            {
+                connection.Open();
+                count = cmd.ExecuteNonQuery();
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+            return count == 1;
+        }
     }
 }
