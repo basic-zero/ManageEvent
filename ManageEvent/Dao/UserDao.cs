@@ -10,9 +10,9 @@ namespace ManageEvent.Dao {
     public class UserDao {
         public bool Authentication(string token) {
             SqlConnection connection = Connection.createConnection();
-            string query = "Select name from tblUser where token=@token";
+            string query = "Select name from tblUser where token like @token";
             SqlCommand cmd = new SqlCommand(query, connection);
-            cmd.Parameters.AddWithValue("@token", token);
+            cmd.Parameters.AddWithValue("@token", "%"+token);
             bool result = false;
             try {
                 connection.Open();
