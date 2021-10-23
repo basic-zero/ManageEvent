@@ -78,11 +78,20 @@ namespace ManageEvent.Controllers
             if (new UserDao().Authentication(eventForPut.Token))
             {
                 Event newEvent = new Event();
-                newEvent.Name = eventForPut.Name;
-                newEvent.Description = eventForPut.Description;
-                newEvent.EventDateAt = eventForPut.EventDateAt;
                 newEvent.Id = id;
-                new EventDao().Update(newEvent);
+                if (eventForPut.Status == null)
+                {
+                    newEvent.Name = eventForPut.Name;
+                    newEvent.Description = eventForPut.Description;
+                    newEvent.EventDateAt = eventForPut.EventDateAt;
+                    new EventDao().Update(newEvent);
+                }
+                else
+                {
+                    newEvent.Status = eventForPut.Status;
+                    new EventDao().UpdateStatus(newEvent);
+                }
+                
             }
         }
 

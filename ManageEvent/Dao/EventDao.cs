@@ -120,6 +120,26 @@ namespace ManageEvent.Dao
             return count == 1;
         }
 
+        public bool UpdateStatus(Event dto)
+        {
+            SqlConnection connection = Connection.createConnection();
+            SqlCommand cmd = new SqlCommand("Update tblEvent set status=@status where id=@id;", connection);
+            cmd.Parameters.AddWithValue("@id", dto.Id);
+            cmd.Parameters.AddWithValue("@status", dto.Status);
+            int count = 0;
+            try
+            {
+                connection.Open();
+                count = cmd.ExecuteNonQuery();
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+            return count == 1;
+        }
+
     }
 
 }
