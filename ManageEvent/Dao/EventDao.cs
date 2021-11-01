@@ -48,10 +48,10 @@ namespace ManageEvent.Dao
             var checkInLisst= checkInDao.GetAll(dto.EventId);
             foreach(CheckIn checkIn in checkInLisst)
             {
-                QRModuleLib.QRModule.CreateQRCode(checkIn.Name+"|"+ checkIn.Email+ "|"+checkIn.Id, checkIn.Name+".png", dto.EventId.ToString());
+                QRModuleLib.QRModule.CreateQRCode(checkIn.Name + "|" + checkIn.Email + "|" + checkIn.Id, checkIn.Name + ".png", dto.EventId.ToString());
                 string root = AppContext.BaseDirectory;
-                EmailLibrary.Email.SendEMail("checkInQRCodeApp@gmail.com", "check123456", checkIn.Email, dto.Subject, dto.Body, root+dto.EventId+"\\"+checkIn.Name+".png");
-                File.Delete(root + dto.EventId + "\\"+ checkIn.Name + ".png");
+                EmailLibrary.Email.SendEMail("checkInQRCodeApp@gmail.com", "check123456", checkIn.Email, dto.Subject, dto.Body, root + dto.EventId + "\\" + checkIn.Name + ".png");
+                File.Delete(root + dto.EventId + "\\" + checkIn.Name + ".png");
             }
         }
 

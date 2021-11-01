@@ -232,6 +232,27 @@ namespace ManageEvent.Dao {
             return result;
         }
 
+        public Profile getProfile(String token) {
+            Profile profile = new Profile();
+            SqlConnection connection = Connection.createConnection();
+            try {
+                connection.Open();
+                string query = "Select u.email, u.name,u.id ,(Select Count(id) From tblGroup Where userId = u.id) as 'GroupCount', (Select Count(id) From tblEvent Where userId = u.id) as 'EventCount' From tblUSer u Where token = @Token";
+                SqlCommand cmd = new SqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@Token", token);
+                SqlDataReader dataReader = cmd.ExecuteReader();
+                if (dataReader.Read()) {
+                    profile.Email = dataReader.GetString(0);
+                    profile.Name = dataReader.GetString(1);
+                    profile.GroupCount = dataReader.GetInt32(2);
+                    profile.EventCount = dataReader.GetInt32(3);
+                }
+            } finally {
+                connection.Close();
+            }
+            return profile;
+        }
+
 
     }
 
