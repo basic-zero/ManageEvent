@@ -126,6 +126,12 @@ namespace ManageEvent.Controllers {
             return result;
         }
 
+        [HttpPost("getProfile/")]
+        public Profile Post([FromBody] Token token) {
+            return new UserDao().getProfile(token.TokenString);
+        }
+
+
 
 
         // PUT api/<UsersController>/5
