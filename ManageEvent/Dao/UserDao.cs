@@ -237,7 +237,7 @@ namespace ManageEvent.Dao {
             SqlConnection connection = Connection.createConnection();
             try {
                 connection.Open();
-                string query = "Select u.email, u.name,u.id ,(Select Count(id) From tblGroup Where userId = u.id AND status != 0) as 'GroupCount', (Select Count(id) From tblEvent Where userId = u.id AND status != 'deleted') as 'EventCount' From tblUSer u Where token = @token";
+                string query = "Select u.email, u.name ,(Select Count(id) From tblGroup Where userId = u.id AND status != 0) as 'GroupCount', (Select Count(id) From tblEvent Where userId = u.id AND status != 'deleted') as 'EventCount' From tblUSer u Where token = @token";
                 SqlCommand cmd = new SqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("@Token", token);
                 SqlDataReader dataReader = cmd.ExecuteReader();
