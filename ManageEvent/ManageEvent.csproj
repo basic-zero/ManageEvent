@@ -19,10 +19,10 @@
 
   <ItemGroup>
     <Reference Include="EmailLibrary">
-      <HintPath>..\..\..\..\..\Desktop\Deploy\Deploy\EmailLibrary.dll</HintPath>
+      <HintPath>..\..\..\..\Downloads\EmailLibrary.dll</HintPath>
     </Reference>
     <Reference Include="QRModuleLib">
-      <HintPath>..\..\..\..\..\Desktop\Deploy\Deploy\QRModuleLib.dll</HintPath>
+      <HintPath>..\..\..\..\Downloads\QRModuleLib.dll</HintPath>
     </Reference>
   </ItemGroup>
 
