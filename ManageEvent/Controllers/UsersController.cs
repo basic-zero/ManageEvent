@@ -48,32 +48,8 @@ namespace ManageEvent.Controllers {
             return result;
         }
 
-        // POST api/registerByGG
-        // return 0 => "Error"
-        // return 1 => "Ok"
-        // return 2 => "Email đã được đăng ký"
-        [HttpPost("registerByGG/")]
-        public UserForLogin Post([FromBody] UserRegisterByGG user) {
-            UserForLogin result = new UserForLogin();
-            result.Status = 0;
-            try {
-                User registerUser = new User();
-                registerUser.Email = user.Email;
-                registerUser.Name = user.Name;
-                registerUser.Token = user.Token;
-                UserDao userDao = new UserDao();
-                if (userDao.RegisterWithGG(registerUser, registerUser.Token)) {
-                    result = userDao.LoginWithGG(registerUser.Token);
-                    result.Status = 1;
-                }
-            } catch (Exception e) {
-                if (e.Message.Contains("Cannot insert duplicate key in object 'dbo.tblUser'")) {
-                    result.Status = 2;
-                }
-            }
-            return result;
-
-        }
+    
+        
 
         // POST api/loginByEmailPwd
         // return 0 => "Error"
@@ -104,27 +80,7 @@ namespace ManageEvent.Controllers {
             }
             return result;
         }
-        // return 0 => "Error"
-        // return 1 => "Ok"
-        // return 2 => "Email không tồn tại"
-        // return 3 => "Sai loại account"
-        [HttpPost("loginByGG/")]
-        public UserForLogin Post([FromBody] UserLoginGG user) {
-            UserForLogin result = new UserForLogin();
-            result.Status = 0;
-            try {
-                result = new UserDao().LoginWithGG(user.Token);
-                result.Status = 1;
-            } catch (Exception e) {
-                if (e.Message.Contains("incorrect type of account")) {
-                    result.Status = 3;
-                }
-                if (e.Message.Contains("email does not exist")) {
-                    result.Status = 2;
-                }
-            }
-            return result;
-        }
+       
 
         [HttpPost("getProfile/")]
         public Profile Post([FromBody] Token token) {
